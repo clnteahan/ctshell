@@ -1,12 +1,15 @@
 import Quickshell
 import QtQuick
-
-Row {
+Item {
   id: root
-  height: parent.height
-  width: children.width
+  width: row.implicitWidth
+  Row {
+    id: row
+    spacing: 2
+    anchors.fill: parent
 
-  ClockWidget {
-    anchors.centerIn: root
+    ClockWidget {
+      anchors.verticalCenter: parent.verticalCenter
+    }
   }
 }

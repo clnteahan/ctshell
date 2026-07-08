@@ -16,12 +16,25 @@ Scope {
         left: true
         right: true
       }
-      BarLeft { id: barLeft; anchors.left: parent.left; anchors.verticalCenter: parent.verticalCenter }
-      BarRight { id: barRight; anchors.right: parent.right; anchors.verticalCenter: parent.verticalCenter }
+      BarLeft {
+        id: barLeft
+        anchors.left: parent.left
+        anchors.right: barMiddle.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+      }
+      BarRight {
+        id: barRight
+        anchors.left: barMiddle.right
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+      }
       BarMiddle {
-        anchors.left: barLeft.right
-        anchors.right: barRight.left
-        anchors.verticalCenter: parent.verticalCenter
+        id: barMiddle
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
       }
       color: Theme.colors.background
 

@@ -6,28 +6,41 @@ import qs
 
 Row {
   id: root
+  readonly property real percent: {
+    Math.round(UPower.displayDevice.percentage * 100)
+  } 
+  readonly property bool charging: {
+    UPower.devices.values[0].state == UPowerDeviceState.Charging
+  }
   Text {
     color: Theme.colors.on_background
     id: battText
-    text: Math.round(UPower.devices.values[0].percentage * 100) + "%"
+    text: root.percent + "%"
   }
   Item {
     id: iconWrap
-    width: 0.95 * battText.height
+    width: 1.4 * battText.height
     height: 0.95 * battText.height
-
+    Rectangle {
+      width: img.width * 0.75 * (root.percent / 100)
+      height: img.height * 0.49
+      anchors.horizontalCenterOffset: root.percent / -100
+      anchors.verticalCenter: img.verticalCenter
+      anchors.left: img.left
+      color: root.percent <= 30 ? root.percent <= 20 ? Theme.palettes["error"]["30"] : Theme.palettes["error"]["70"] : Theme.palettes["primary"]["60"]
+    }
     VectorImage {
       id: img
       anchors.fill: parent
       preferredRendererType: VectorImage.CurveRenderer
-      source: "../Icons/battery.svg"
+      source: root.charging ? "../Icons/battery-charging.svg" : "../Icons/battery.svg"
       visible: false
     }
     MultiEffect {
       anchors.fill: parent
       source: img
       colorization: 1.0
-      colorizationColor: Theme.palettes["primary"][(Math.round(UPower.devices.values[0].percentage * 10) * 10 + "")]
+      colorizationColor: Theme.colors.on_background
     }
   }
 }
