@@ -28,6 +28,7 @@ Row {
       anchors.verticalCenter: img.verticalCenter
       anchors.left: img.left
       color: root.percent <= 30 ? root.percent <= 20 ? Theme.palettes["error"]["30"] : Theme.palettes["error"]["70"] : Theme.palettes["primary"]["60"]
+      enabled: false
     }
     VectorImage {
       id: img
@@ -35,6 +36,7 @@ Row {
       preferredRendererType: VectorImage.CurveRenderer
       source: root.charging ? "../Icons/battery-charging.svg" : "../Icons/battery.svg"
       visible: false
+      enabled: false
     }
     MultiEffect {
       anchors.fill: parent

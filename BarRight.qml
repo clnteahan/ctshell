@@ -15,6 +15,7 @@ Item {
       id: batt
       anchors.verticalCenter: parent.verticalCenter
     }
+    Bluetooth {}
     Text {
       id: rText
       horizontalAlignment: Text.AlignHCenter

@@ -22,6 +22,7 @@ Scope {
         anchors.right: barMiddle.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
+        enabled: false
       }
       BarRight {
         id: barRight
@@ -29,12 +30,14 @@ Scope {
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
+        enabled: false
       }
       BarMiddle {
         id: barMiddle
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         anchors.bottom: parent.bottom
+        enabled: false
       }
       color: Theme.colors.background
 
