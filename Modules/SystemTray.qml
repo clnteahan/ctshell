@@ -61,7 +61,7 @@ Row {
 
       ToolTip.visible: mouseArea.containsMouse && trayIcon.modelData.title.length > 0
       ToolTip.text: trayIcon.modelData.title
-      ToolTip.delay: 400
+      ToolTip.delay: 1000
     }
   }
 }

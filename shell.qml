@@ -1,4 +1,4 @@
-//@ pragma AppId dev.teahan.ctshell
+//@ pragma UseQApplication
 
 import Quickshell
 import qs.LockScreen
