@@ -22,7 +22,7 @@ Scope {
         anchors.right: barMiddle.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        enabled: false
+        screen: barWin.screen
       }
       BarRight {
         id: barRight
@@ -30,18 +30,17 @@ Scope {
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        enabled: false
+        panelWindow: barWin
       }
       BarMiddle {
         id: barMiddle
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        enabled: false
       }
       color: Theme.colors.background
 
-      implicitHeight: 30
+      implicitHeight: 35
     }
   }
 }

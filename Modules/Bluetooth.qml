@@ -8,7 +8,7 @@ Item {
   id: root
   property int state: Bluetooth.defaultAdapter.enabled
   anchors.verticalCenter: parent.verticalCenter
-  implicitHeight: parent.implicitHeight
+  implicitHeight: parent.implicitHeight * 0.6
   implicitWidth: state ? img.width / img.height * height : 0
   Component.onCompleted: {
       console.debug("Dimensions: ", width, height)

@@ -3,6 +3,7 @@ import qs.Modules
 
 Item {
   id: root
+  required property var panelWindow
 
   Row {
     id: row
@@ -15,12 +16,10 @@ Item {
       id: batt
       anchors.verticalCenter: parent.verticalCenter
     }
-    Bluetooth {}
-    Text {
-      id: rText
-      horizontalAlignment: Text.AlignHCenter
-      color: Theme.colors.on_background
-      text: "R"
+    SystemTray {
+      panelWindow: root.panelWindow
+      anchors.verticalCenter: parent.verticalCenter
     }
+    Bluetooth {}
   }
 }
