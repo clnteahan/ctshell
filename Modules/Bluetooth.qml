@@ -8,9 +8,12 @@ import Quickshell.Widgets
 
 WrapperItem {
   id: root
-  property int state: Bluetooth.defaultAdapter.enabled
+  property int state: {
+    if (!Bluetooth.defaultAdapter) return 0
+    return Bluetooth.defaultAdapter.enabled
+  }
 
   BluetoothIcon {
-    color: "#ffffffff"
+    color: Theme.colors.on_background
   }
 }

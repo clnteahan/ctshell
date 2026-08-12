@@ -7,7 +7,7 @@ import qs
 Row {
   id: root
   readonly property real percent: {
-    Math.round(UPower.displayDevice.percentage * 100)
+    UPower.onBattery ? Math.round(UPower.displayDevice.percentage * 100) : 0
   } 
   readonly property bool charging: {
     UPower.devices.values[0].state == UPowerDeviceState.Charging
@@ -21,6 +21,7 @@ Row {
     id: iconWrap
     width: 1.4 * battText.height
     height: 0.95 * battText.height
+    visible: UPower.onBattery
     Rectangle {
       width: img.width * 0.75 * (root.percent / 100)
       height: img.height * 0.49
