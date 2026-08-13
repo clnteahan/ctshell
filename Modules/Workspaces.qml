@@ -1,5 +1,6 @@
 import QtQuick
 import qs
+import qs.Modules
 
 // Niri.qml lives alongside this file in Modules/, so it's visible here
 // without an explicit import.
@@ -15,9 +16,11 @@ Row {
   readonly property var _workspaces: {
     if (!root.screen)
       return []
-    return Niri.workspaces
-      .filter(w => w.output === root.screen.name)
-      .sort((a, b) => a.idx - b.idx)
+    if (WM.name == "niri")
+      return Niri.workspaces
+        .filter(w => w.output === root.screen.name)
+        .sort((a, b) => a.idx - b.idx)
+    return []
   }
 
   Repeater {

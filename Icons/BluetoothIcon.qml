@@ -21,20 +21,18 @@ Item {
     ]
     id: __qt_toplevel
     Shape {
-        preferredRendererType: Shape.CurveRenderer
         id: _qt_node0
         transformOrigin: Item.TopLeft
         ShapePath {
-            id: _qt_node1_stroke
+            id: _qt_node1_fill_stroke
             strokeColor: __qt_toplevel.color
             strokeWidth: 2
             capStyle: ShapePath.RoundCap
             joinStyle: ShapePath.RoundJoin
             miterLimit: 4
-            fillColor: "transparent"
+            fillColor: "#00000000"
             fillRule: ShapePath.WindingFill
-            pathHints: ShapePath.PathQuadratic
-            PathSvg { path: "M 6.5 6.5 L 17.5 17.5 L 12 23 L 12 1 L 17.5 6.5 L 6.5 17.5 " }
+            PathSvg { path: "M 7 7 L 17 17 L 12 22 L 12 2 L 17 7 L 7 17 " }
         }
     }
 }

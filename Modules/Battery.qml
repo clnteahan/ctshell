@@ -7,12 +7,11 @@ import qs
 Row {
   id: root
   readonly property real percent: {
-    UPower.onBattery ? Math.round(UPower.displayDevice.percentage * 100) : 0
+    Math.round(UPower.displayDevice.percentage * 100)
   } 
   readonly property bool charging: {
-    UPower.devices.values[0].state == UPowerDeviceState.Charging
+    UPower.devices.values[0] ? UPower.devices.values[0].state == UPowerDeviceState.Charging : false
   }
-  visible: UPower.onBattery
   Text {
     color: Theme.colors.on_background
     id: battText
