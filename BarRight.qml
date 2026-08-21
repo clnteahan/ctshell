@@ -20,9 +20,5 @@ Item {
       panelWindow: root.panelWindow
       anchors.verticalCenter: parent.verticalCenter
     }
-    Bluetooth {
-      anchors.verticalCenter: row.verticalCenter
-      scale: 0.6
-    }
   }
 }

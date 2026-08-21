@@ -3,6 +3,7 @@ import QtQuick.Controls
 import Quickshell.Services.SystemTray
 import Quickshell.Widgets
 import qs
+import qs.Modules
 
 Row {
   id: root
@@ -31,11 +32,27 @@ Row {
         Behavior on color { ColorAnimation { duration: 120 } }
       }
 
-      IconImage {
+      Loader {
+        id: loader
+        sourceComponent: trayIcon.modelData.title === "blueman" ? btIcon : icon
         anchors.centerIn: parent
-        implicitSize: 16
-        asynchronous: true
-        source: trayIcon.modelData.icon
+      }
+
+      Component {
+        id: btIcon
+        Bluetooth {
+          scale: 0.6
+        }
+
+      }
+      Component {
+        id: icon
+        IconImage {
+          anchors.centerIn: parent
+          implicitSize: 16
+          asynchronous: true
+          source: trayIcon.modelData.icon
+        }
       }
 
       MouseArea {
