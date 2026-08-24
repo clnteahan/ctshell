@@ -16,24 +16,24 @@ Scope {
         left: true
         right: true
       }
-      BarLeft {
-        id: barLeft
+      BarA {
+        id: barA
         anchors.left: parent.left
-        anchors.right: barMiddle.left
+        anchors.right: barB.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         screen: barWin.screen
       }
-      BarRight {
+      BarC {
         id: barRight
-        anchors.left: barMiddle.right
+        anchors.left: barB.right
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         panelWindow: barWin
       }
-      BarMiddle {
-        id: barMiddle
+      BarB {
+        id: barB
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         anchors.bottom: parent.bottom
