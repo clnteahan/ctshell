@@ -6,6 +6,7 @@ import QtQuick.Shapes
 import QtQuick.Effects
 
 Item {
+    required property var color
     implicitWidth: 24
     implicitHeight: 24
     component AnimationsInfo : QtObject
@@ -24,7 +25,7 @@ Item {
         transformOrigin: Item.TopLeft
         ShapePath {
             id: _qt_node1_fill_stroke
-            strokeColor: "#ffffffff"
+            strokeColor: __qt_toplevel.color
             strokeWidth: 2
             capStyle: ShapePath.RoundCap
             joinStyle: ShapePath.RoundJoin
@@ -35,7 +36,7 @@ Item {
         }
         ShapePath {
             id: _qt_node2_fill_stroke
-            strokeColor: "#ffffffff"
+            strokeColor: __qt_toplevel.color
             strokeWidth: 2
             capStyle: ShapePath.RoundCap
             joinStyle: ShapePath.RoundJoin
@@ -46,7 +47,7 @@ Item {
         }
         ShapePath {
             id: _qt_node3_fill_stroke
-            strokeColor: "#ffffffff"
+            strokeColor: __qt_toplevel.color
             strokeWidth: 2
             capStyle: ShapePath.RoundCap
             joinStyle: ShapePath.RoundJoin

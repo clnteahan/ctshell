@@ -21,8 +21,8 @@ Row {
       id: trayIcon
       required property var modelData
 
-      width: 24
-      height: 24
+      height: Math.max(root.height, 12)
+      width: height
       anchors.verticalCenter: parent.verticalCenter
 
       Rectangle {
@@ -30,28 +30,27 @@ Row {
         radius: 6
         color: mouseArea.containsMouse ? Theme.colors.surface_container_high : "transparent"
         Behavior on color { ColorAnimation { duration: 120 } }
-      }
 
-      Loader {
-        id: loader
-        sourceComponent: trayIcon.modelData.title === "blueman" ? btIcon : icon
-        anchors.centerIn: parent
-      }
-
-      Component {
-        id: btIcon
-        Bluetooth {
-          scale: 0.6
+        Loader {
+          id: loader
+          sourceComponent: trayIcon.modelData.title === "blueman" ? btIcon : icon
+          anchors.fill: parent
         }
 
-      }
-      Component {
-        id: icon
-        IconImage {
-          anchors.centerIn: parent
-          implicitSize: 16
-          asynchronous: true
-          source: trayIcon.modelData.icon
+        Component {
+          id: btIcon
+          BtMgr {
+            anchors.fill: parent
+          }
+
+        }
+        Component {
+          id: icon
+          IconImage {
+            anchors.fill: parent
+            asynchronous: true
+            source: trayIcon.modelData.icon
+          }
         }
       }
 

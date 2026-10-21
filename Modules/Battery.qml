@@ -3,6 +3,7 @@ import QtQuick.VectorImage
 import QtQuick.Effects
 import Quickshell.Services.UPower
 import qs
+import qs.Icons
 
 Row {
   id: root
@@ -19,30 +20,54 @@ Row {
   }
   Item {
     id: iconWrap
-    width: 1.4 * battText.height
-    height: 0.95 * battText.height
-    Rectangle {
-      width: img.width * 0.75 * (root.percent / 100)
-      height: img.height * 0.49
-      anchors.horizontalCenterOffset: root.percent / -100
-      anchors.verticalCenter: img.verticalCenter
-      anchors.left: img.left
-      color: root.percent <= 30 ? root.percent <= 20 ? Theme.palettes["error"]["30"] : Theme.palettes["error"]["70"] : Theme.palettes["primary"]["60"]
-      enabled: false
+    height: parent.height
+    width: 1.6 * height
+    Component.onCompleted: {
+      console.log("i height:", height)
     }
-    VectorImage {
+    Item {
+      anchors.fill: parent
+      anchors.leftMargin: 2
+      anchors.rightMargin: 6
+      anchors.margins: 4
+      Component.onCompleted: {
+        console.log("ii height:", height)
+      }
+      Rectangle {
+        width: parent.width * (root.percent / 100)
+        height: parent.height
+        anchors.left: img.left
+        color: root.percent <= 30 ? root.percent <= 20 ? Theme.palettes["error"]["30"] : Theme.palettes["error"]["70"] : Theme.palettes["primary"]["60"]
+        enabled: false
+        Component.onCompleted: {
+          console.log("r height:", height)
+        }
+      }
+
+    }
+    Loader {
       id: img
       anchors.fill: parent
-      preferredRendererType: VectorImage.CurveRenderer
-      source: root.charging ? "../Icons/battery-charging.svg" : "../Icons/battery.svg"
-      visible: false
-      enabled: false
+      height: parent.height
+      sourceComponent: root.charging ? chargingComponent : batteryComponent
+      Component.onCompleted: {
+        console.log("l height:", height)
+      }
     }
-    MultiEffect {
-      anchors.fill: parent
-      source: img
-      colorization: 1.0
-      colorizationColor: Theme.colors.on_background
+    Component {
+      id: batteryComponent
+      BatteryIcon {
+        color: Theme.colors.on_background
+        Component.onCompleted: {
+          console.log("b height:", height)
+        }
+      }
+    }
+    Component {
+      id: chargingComponent
+      BatteryChargingIcon {
+        color: Theme.colors.on_background
+      }
     }
   }
 }

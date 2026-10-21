@@ -25,11 +25,13 @@ Scope {
         screen: barWin.screen
       }
       BarC {
-        id: barRight
+        id: barC
         anchors.left: barB.right
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
+        anchors.topMargin: Math.min(24, parent.height / 4)
+        anchors.bottomMargin: anchors.topMargin
         panelWindow: barWin
       }
       BarB {
