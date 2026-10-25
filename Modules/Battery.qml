@@ -14,6 +14,7 @@ Row {
     UPower.devices.values[0] ? UPower.devices.values[0].state == UPowerDeviceState.Charging : false
   }
   Text {
+    anchors.verticalCenter: parent.verticalCenter
     color: Theme.colors.on_background
     id: battText
     text: root.percent + "%"
@@ -22,26 +23,19 @@ Row {
     id: iconWrap
     height: parent.height
     width: 1.6 * height
-    Component.onCompleted: {
-      console.log("i height:", height)
-    }
+    readonly property int strokeWidth: width / 24
     Item {
+      anchors.left: img.left
       anchors.fill: parent
-      anchors.leftMargin: 2
-      anchors.rightMargin: 6
-      anchors.margins: 4
-      Component.onCompleted: {
-        console.log("ii height:", height)
-      }
+      anchors.leftMargin: 2 * iconWrap.strokeWidth
+      anchors.rightMargin: 6 * iconWrap.strokeWidth
+      anchors.margins: 4 * iconWrap.strokeWidth
       Rectangle {
         width: parent.width * (root.percent / 100)
         height: parent.height
-        anchors.left: img.left
+        anchors.left: parent.left
         color: root.percent <= 30 ? root.percent <= 20 ? Theme.palettes["error"]["30"] : Theme.palettes["error"]["70"] : Theme.palettes["primary"]["60"]
         enabled: false
-        Component.onCompleted: {
-          console.log("r height:", height)
-        }
       }
 
     }
@@ -50,17 +44,11 @@ Row {
       anchors.fill: parent
       height: parent.height
       sourceComponent: root.charging ? chargingComponent : batteryComponent
-      Component.onCompleted: {
-        console.log("l height:", height)
-      }
     }
     Component {
       id: batteryComponent
       BatteryIcon {
         color: Theme.colors.on_background
-        Component.onCompleted: {
-          console.log("b height:", height)
-        }
       }
     }
     Component {

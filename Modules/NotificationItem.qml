@@ -10,15 +10,21 @@ import qs.Modules
 Item {
     id: root
     required property var notification
+    property bool isHistoryItem: false
 
     readonly property bool isHovered: hoverHandler.hovered
-    readonly property bool hasActions: notification.actions.length > 0
+    readonly property bool hasActions: (notification.actions || []).length > 0
+
+    signal nClosed
 
     // Width is normally set by the parent column; this is only a default
     implicitWidth: 350
     implicitHeight: contentColumn.implicitHeight + 16
 
     readonly property color bgColor: {
+        if (isHistoryItem) {
+            return Theme.colors.surface_container_high
+        }
         switch (notification.urgency) {
         case NotificationUrgency.Critical: return Theme.palettes["error"]["50"]
         case NotificationUrgency.Low:      return Theme.colors.surface
@@ -27,6 +33,9 @@ Item {
     }
 
     readonly property color borderColor: {
+        if (isHistoryItem) {
+            return Theme.colors.outline_variant
+        }
         switch (notification.urgency) {
         case NotificationUrgency.Critical: return Theme.palettes["error"]["80"]
         case NotificationUrgency.Low:      return Theme.colors.outline_variant
@@ -41,15 +50,36 @@ Item {
         return Quickshell.iconPath(icon, true)
     }
 
+    // Safe property accessors for history items
+    readonly property string safeAppName: notification.appName || qsTr("Notification")
+    readonly property string safeAppIcon: notification.appIcon || ""
+    readonly property string safeSummary: notification.summary || ""
+    readonly property string safeBody: notification.body || ""
+    readonly property var safeActions: notification.actions || []
+    readonly property bool safeHasInlineReply: notification.hasInlineReply || false
+    readonly property string safeInlineReplyPlaceholder: notification.inlineReplyPlaceholder || ""
+    readonly property string safeImage: notification.image || ""
+
     // Close the card (user action). History is recorded by NotificationManager
     // when the notification's `closed` signal fires.
     function dismissNow() {
-        dismissTimer.stop()
-        notification.dismiss()
-        NotificationManager.dismissNotification(notification.id)
+        if (isHistoryItem) {
+            // For history items, remove from history
+            NotificationManager.removeFromHistory(notification.id)
+        } else {
+            // For active notifications, dismiss them
+            dismissTimer.stop()
+            if (notification.dismiss) {
+                notification.dismiss()
+            }
+            NotificationManager.dismissNotification(notification.id)
+        }
+        nClosed()
     }
     function expireNow() {
-      notification.expire()
+        if (!isHistoryItem && notification.expire) {
+            notification.expire()
+        }
     }
 
     // Fade in
@@ -62,7 +92,9 @@ Item {
     // Auto-dismiss timeout in ms (0 = never). Critical notifications always
     // follow the manager's setting; otherwise respect the app's timeout
     // (seconds) and fall back to the per-urgency default.
+    // History items don't auto-dismiss.
     readonly property int timeoutMs: {
+        if (root.isHistoryItem) return 0
         if (notification.urgency !== NotificationUrgency.Critical && notification.expireTimeout > 0)
             return Math.round(notification.expireTimeout * 1000)
         return NotificationManager.getUrgencyTimeout(notification.urgency)
@@ -71,7 +103,7 @@ Item {
     Timer {
         id: dismissTimer
         interval: root.timeoutMs
-        running: root.timeoutMs > 0 && !root.notification.resident && !root.isHovered
+        running: root.timeoutMs > 0 && !root.notification.resident && !root.isHovered && !root.isHistoryItem
         repeat: false
         onTriggered: root.expireNow()
     }
@@ -93,7 +125,7 @@ Item {
     }
     TapHandler {
         onTapped: {
-            if (!root.hasActions && !root.notification.hasInlineReply)
+            if (!root.isHistoryItem && !root.hasActions && !root.safeHasInlineReply)
                 root.dismissNow()
         }
     }
@@ -121,7 +153,7 @@ Item {
                 Image {
                     id: appIcon
                     anchors.fill: parent
-                    source: root.iconSource(root.notification.appIcon)
+                    source: root.iconSource(root.safeAppIcon)
                     sourceSize: Qt.size(48, 48)
                     fillMode: Image.PreserveAspectFit
                     asynchronous: true
@@ -137,8 +169,8 @@ Item {
 
                     Text {
                         anchors.centerIn: parent
-                        text: root.notification.appName
-                              ? root.notification.appName.charAt(0).toUpperCase() : "?"
+                        text: root.safeAppName
+                              ? root.safeAppName.charAt(0).toUpperCase() : "?"
                         color: Theme.colors.on_background
                         font.bold: true
                         font.pixelSize: 12
@@ -152,7 +184,7 @@ Item {
 
                 Text {
                     Layout.fillWidth: true
-                    text: root.notification.appName || qsTr("Notification")
+                    text: root.safeAppName
                     color: Theme.colors.on_background
                     font.bold: true
                     font.pixelSize: 14
@@ -161,11 +193,11 @@ Item {
 
                 Text {
                     Layout.fillWidth: true
-                    text: root.notification.summary
+                    text: root.safeSummary
                     color: Theme.colors.on_background
                     font.pixelSize: 13
                     elide: Text.ElideRight
-                    visible: root.notification.summary.length > 0
+                    visible: root.safeSummary.length > 0
                 }
             }
 
@@ -179,11 +211,15 @@ Item {
                 padding: 0
                 background: Rectangle { radius: 12; color: "transparent" }
                 contentItem: Text {
-                    text: "✕"
+                    text: root.isHistoryItem ? "✕" : "✕"
                     color: Theme.colors.on_background
                     font.pixelSize: 14
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
+                }
+                ToolTip {
+                    text: root.isHistoryItem ? qsTr("Clear from history") : qsTr("Dismiss")
+                    delay: 500
                 }
                 onClicked: root.dismissNow()
             }
@@ -192,13 +228,13 @@ Item {
         // Body
         Text {
             Layout.fillWidth: true
-            text: root.notification.body
+            text: root.safeBody
             color: Theme.colors.on_background
             font.pixelSize: 13
             lineHeight: 1.4
             wrapMode: Text.WordWrap
             textFormat: Text.PlainText
-            visible: root.notification.body.length > 0
+            visible: root.safeBody.length > 0
         }
 
         // Image
@@ -206,20 +242,20 @@ Item {
             id: notifImage
             Layout.fillWidth: true
             Layout.preferredHeight: 150
-            source: root.notification.image
+            source: root.safeImage
             fillMode: Image.PreserveAspectFit
             asynchronous: true
-            visible: root.notification.image.length > 0 && status === Image.Ready
+            visible: root.safeImage.length > 0 && status === Image.Ready
         }
 
-        // Action buttons
+        // Action buttons - only for active notifications
         Flow {
             Layout.fillWidth: true
             spacing: 8
-            visible: root.hasActions
+            visible: !root.isHistoryItem && root.safeActions.length > 0
 
             Repeater {
-                model: root.notification.actions
+                model: root.safeActions
 
                 Button {
                     id: actionButton
@@ -245,16 +281,16 @@ Item {
             }
         }
 
-        // Inline reply
+        // Inline reply - only for active notifications
         RowLayout {
             Layout.fillWidth: true
             spacing: 8
-            visible: root.notification.hasInlineReply
+            visible: !root.isHistoryItem && root.safeHasInlineReply
 
             TextField {
                 id: replyField
                 Layout.fillWidth: true
-                placeholderText: root.notification.inlineReplyPlaceholder || qsTr("Reply...")
+                placeholderText: root.safeInlineReplyPlaceholder || qsTr("Reply...")
                 color: Theme.colors.on_surface
                 font.pixelSize: 13
                 padding: 8
@@ -287,8 +323,10 @@ Item {
                     font.pixelSize: 12
                 }
                 onClicked: {
-                    root.notification.sendInlineReply(replyField.text)
-                    replyField.text = ""
+                    if (root.notification.sendInlineReply) {
+                        root.notification.sendInlineReply(replyField.text)
+                        replyField.text = ""
+                    }
                 }
             }
         }

@@ -17,10 +17,23 @@ Item {
     implicitHeight: 24
 
     // The popup only exists while there is something to show
+    // Keep popup open while mouse is over the indicator or the popup itself
     LazyLoader {
-        active: NotificationManager.hasNotifications || mouseArea.containsMouse
+        id: popupLoader
+        active: NotificationManager.hasNotifications || NotificationManager.history.length > 0
         NotificationPopup {
-          showHistoric: mouseArea.containsMouse
+            id: popupItem
+            showHistoric: false
+            Connections {
+              target: root
+              function onClicked() {
+                popupItem.showHistoric = !popupItem.showHistoric
+                popupLoader.keepOpen = !popupLoader.keepOpen
+              }
+            }
+            onNClosed: {
+              showHistoric = false
+            }
         }
     }
 

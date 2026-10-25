@@ -26,12 +26,10 @@ Singleton {
             // Without this the notification is dropped and never shows up
             notification.tracked = true
 
-            if (!notification.transient)
-                root.unreadCount += 1
-
             // Record every closed notification (dismissed, expired, or closed by the app)
-            notification.closed.connect(() => {
+            notification.closed.connect((reason) => {
                 if (notification.transient) return
+                if (reason != NotificationCloseReason.Expired) return
                 root.addToHistory(notification)
             })
         }
@@ -46,10 +44,13 @@ Singleton {
     // Notifications received since the indicator was last clicked.
     // (`notification.tracked` is true for *every* tracked notification, so it
     // can't be used to detect "unread".)
-    property int unreadCount: 0
+    readonly property int unreadCount: activeNotifications.values.length + history.length
 
-    function markAllRead() {
-        unreadCount = 0
+    function dismisssAll() {
+      for (const n of activeNotifications) {
+        n.dismiss()
+      }
+      history = []
     }
 
     // Notification history (most recent first)
@@ -94,7 +95,7 @@ Singleton {
             return
         // Reassign (not mutate) so bindings on `history` update, and keep the
         // newest entries instead of refusing new ones once full.
-        history = [{
+        history = [...history, {
             id: notification.id,
             appName: notification.appName,
             appIcon: notification.appIcon,
@@ -102,21 +103,26 @@ Singleton {
             body: notification.body,
             urgency: notification.urgency,
             timestamp: new Date().toISOString()
-        }, ...history].slice(0, maxHistory)
+        }].slice(0, maxHistory)
     }
 
     function clearHistory() {
         history = []
     }
 
+    function removeFromHistory(id) {
+      history = history.filter(n => n.id !== id)
+    }
+
     // Dismiss a notification by ID (history is recorded by the `closed` handler)
     function dismissNotification(id) {
         for (const n of activeNotifications.values) {
             if (n.id === id) {
-                n.dismiss()
-                return true
+              n.dismiss()
+              return true
             }
         }
+        removeFromHistory(id)
         return false
     }
 
