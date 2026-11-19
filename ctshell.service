@@ -5,7 +5,7 @@ Requisite=graphical-session.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/quickshell
+ExecStart=echo "rs ctshell has no executable specified yet"
 Restart=on-failure
 
 [Install]
