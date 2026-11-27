@@ -1,0 +1,61 @@
+// Example ctshell bar config.
+//
+// Install at $XDG_CONFIG_HOME/ctshell/bar.kdl (usually ~/.config/ctshell/bar.kdl).
+// If that file is missing, ctshell falls back to built-in defaults (a top bar
+// with a clock in the center).
+
+// Which screen edge the bar docks to: "top" | "bottom" | "left" | "right".
+// Top/bottom bars are horizontal; left/right bars are vertical.
+edge "top"
+
+// Layer-shell stacking layer: "background" | "bottom" | "top" | "overlay".
+layer "top"
+
+// Name of the output (as reported by `niri msg outputs`, e.g. "eDP-1") to
+// pin the bar to. Optional: if omitted, the bar binds to whichever output
+// is active at launch, and the `workspaces` widget shows workspaces from
+// every output instead of just one.
+// output "eDP-1"
+
+// Bar thickness in logical pixels (height for horizontal bars, width for
+// vertical bars). The other dimension stretches to fill the screen edge.
+thickness 32
+
+// Margin (logical pixels) between the bar and the screen edge, on all sides.
+margin 0
+
+// Rendering scale factor, independent of thickness - use this to make
+// bar content crisper/larger on HiDPI outputs without changing how much
+// screen space the bar reserves.
+scale 1.0
+
+// Whether the bar reserves screen space (an exclusive zone) so windows
+// don't overlap it. Set to false to float the bar on top of windows instead.
+exclusive true
+
+// Default font family for every widget. Optional: if omitted, widgets use
+// iced's default UI font. Any individual widget can override this with its
+// own `font` property.
+// font "JetBrainsMono Nerd Font"
+
+// Widgets are grouped into three sections per bar: start, center, end.
+// For a horizontal bar these read left-to-right; for a vertical bar,
+// top-to-bottom. Currently supported widgets: clock, workspaces.
+//
+// workspaces shows niri's workspaces and switches to one on click.
+// style: "numbers" (default, shows each workspace's index) | "dots"
+// (a filled dot for the active workspace, hollow for the rest) | "names"
+// (the workspace's niri-assigned name, falling back to its index).
+//
+// Both widgets accept a `font` property to override the bar-wide font
+// above for just that widget.
+widgets {
+    start {
+        workspaces style="numbers"
+    }
+    center {
+        clock format="%Y-%m-%d %H:%M:%S" font="JetBrainsMono Nerd Font"
+    }
+    end {
+    }
+}

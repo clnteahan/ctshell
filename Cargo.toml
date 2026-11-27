@@ -4,3 +4,16 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+chrono = "0.4.45"
+iced = { version = "0.14.0", features = ["advanced", "debug", "tokio"] }
+iced_layershell = "0.19.1"
+knuffel = "3.2.0"
+niri-ipc = "26.4.0"
+notify = "9.0.0"
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+tokio = { version = "1.54.1", features = ["rt", "time"] }
+# Pinned: iced_exdevtools 0.19.1 (pulled in by iced_layershell) fails to
+# compile against newer winit-core betas (non-exhaustive match on
+# NativeKeyCode). Keep this at the version iced_layershell was built against.
+winit-core = "=0.31.0-beta.2"
